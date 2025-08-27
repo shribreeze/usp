@@ -12,7 +12,7 @@ export default function GatedContent() {
   }, [])
 
   // Check access via subscription manager
-  const { data: hasAccess } = useReadContract({
+  const { data: hasAccess, refetch: refetchAccess } = useReadContract({
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'checkAccess',
@@ -21,13 +21,24 @@ export default function GatedContent() {
   })
 
   // Check NFT ownership
-  const { data: hasNFT } = useReadContract({
+  const { data: hasNFT, refetch: refetchNFT } = useReadContract({
     address: CONTRACTS.NFT_ACCESS_PASS as `0x${string}`,
     abi: NFT_ACCESS_PASS_ABI,
     functionName: 'balanceOf',
     args: [address!],
     query: { enabled: !!address && mounted },
   })
+
+  // Refresh access status periodically
+  useEffect(() => {
+    if (mounted && address) {
+      const interval = setInterval(() => {
+        refetchAccess()
+        refetchNFT()
+      }, 3000)
+      return () => clearInterval(interval)
+    }
+  }, [mounted, address, refetchAccess, refetchNFT])
 
   if (!mounted) {
     return (

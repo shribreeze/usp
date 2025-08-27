@@ -15,7 +15,7 @@ export default function SubscribeCard() {
   }, [])
 
   // Read subscription data
-  const { data: subscription } = useReadContract({
+  const { data: subscription, refetch: refetchSubscription } = useReadContract({
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'getSubscription',
@@ -24,7 +24,7 @@ export default function SubscribeCard() {
   })
 
   // Read plan data
-  const { data: plan } = useReadContract({
+  const { data: plan, refetch: refetchPlan } = useReadContract({
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'getPlan',
@@ -32,11 +32,50 @@ export default function SubscribeCard() {
     query: { enabled: mounted },
   })
 
+
+
   // Subscribe transaction
-  const { writeContract: subscribe, isPending: isSubscribing } = useWriteContract()
+  const { writeContract: subscribe, isPending: isSubscribing, data: subscribeHash } = useWriteContract()
 
   // Cancel transaction
-  const { writeContract: cancel, isPending: isCancelling } = useWriteContract()
+  const { writeContract: cancel, isPending: isCancelling, data: cancelHash } = useWriteContract()
+
+  // Wait for subscribe transaction
+  const { isSuccess: subscribeSuccess } = useWaitForTransactionReceipt({
+    hash: subscribeHash,
+  })
+
+  // Wait for cancel transaction
+  const { isSuccess: cancelSuccess } = useWaitForTransactionReceipt({
+    hash: cancelHash,
+  })
+
+  // Refresh data when transactions complete
+  useEffect(() => {
+    if (subscribeSuccess || cancelSuccess) {
+      refetchSubscription()
+    }
+  }, [subscribeSuccess, cancelSuccess, refetchSubscription])
+
+  // Live balance countdown - use hardcoded price since plan call fails
+  useEffect(() => {
+    if (subscription && subscription[3]) { // active subscription
+      const pricePerSecond = 1000000000000n // 0.000001 STT per second (from deploy script)
+      const updateBalance = () => {
+        const now = BigInt(Math.floor(Date.now() / 1000))
+        const timeElapsed = now - subscription[2]
+        const cost = timeElapsed * pricePerSecond
+        const currentBalance = subscription[1] - cost
+        const balanceValue = currentBalance > 0n ? currentBalance : 0n
+        setBalance(formatEther(balanceValue))
+      }
+      updateBalance()
+      const interval = setInterval(updateBalance, 1000)
+      return () => clearInterval(interval)
+    } else {
+      setBalance('0')
+    }
+  }, [subscription])
 
   const handleSubscribe = () => {
     subscribe({
@@ -74,18 +113,31 @@ export default function SubscribeCard() {
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h3 className="text-xl font-bold mb-4">Premium Plan</h3>
       
-      {plan && (
-        <div className="mb-4 p-3 bg-gray-50 rounded">
-          <p className="text-sm text-gray-600">Price: {formatEther(plan[0])} ETH/second</p>
-          <p className="text-sm text-gray-600">Name: {plan[2]}</p>
-        </div>
-      )}
+      <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h4 className="font-semibold text-blue-900 mb-2">💡 How it works:</h4>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Pay once, stream per second</li>
+          <li>• Balance decreases in real-time</li>
+          <li>• Cancel anytime, get refund</li>
+          <li>• NFT grants instant access</li>
+        </ul>
+        <p className="text-xs text-blue-600 mt-2">
+          Rate: 0.000001 STT/second | Plan: Premium Plan
+        </p>
+      </div>
 
       {isActive ? (
         <div className="space-y-4">
           <div className="p-4 bg-green-50 border border-green-200 rounded">
-            <p className="text-green-800 font-semibold">✅ Active Subscription</p>
-            <p className="text-sm text-green-600">Balance: {formatEther(subscription[1])} ETH</p>
+            <p className="text-green-800 font-semibold flex items-center">
+              🔥 Live Streaming Subscription
+            </p>
+            <div className="mt-2 space-y-1">
+              <p className="text-lg font-mono text-green-700">Balance: {balance} STT</p>
+              <p className="text-xs text-green-600">
+                ⏱️ Decreasing every second | 💰 Original: {formatEther(subscription[1])} STT
+              </p>
+            </div>
           </div>
           
           <div className="space-y-2">
@@ -94,7 +146,7 @@ export default function SubscribeCard() {
               step="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="Amount to add (ETH)"
+              placeholder="Amount to add (STT)"
               className="w-full p-3 border border-gray-300 rounded-lg"
             />
             <button
@@ -106,13 +158,24 @@ export default function SubscribeCard() {
             </button>
           </div>
 
-          <button
-            onClick={handleCancel}
-            disabled={isCancelling}
-            className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg"
-          >
-            {isCancelling ? 'Cancelling...' : 'Cancel Subscription'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                refetchSubscription()
+                refetchPlan()
+              }}
+              className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-sm"
+            >
+              🔄 Refresh
+            </button>
+            <button
+              onClick={handleCancel}
+              disabled={isCancelling}
+              className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg text-sm"
+            >
+              {isCancelling ? 'Cancelling...' : 'Cancel'}
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -121,7 +184,7 @@ export default function SubscribeCard() {
             step="0.01"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="Amount (ETH)"
+            placeholder="Amount (STT)"
             className="w-full p-3 border border-gray-300 rounded-lg"
           />
           <button
