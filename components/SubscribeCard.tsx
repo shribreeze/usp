@@ -10,78 +10,35 @@ export default function SubscribeCard() {
   const [balance, setBalance] = useState('0')
   const [mounted, setMounted] = useState(false)
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Read subscription data
-  const { data: subscription, refetch: refetchSubscription } = useReadContract({
+  const { data: subscription } = useReadContract({
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'getSubscription',
     args: [address!],
-    chainId: somniaTestnet.id,
-    query: { enabled: !!address },
+    query: { enabled: !!address && mounted },
   })
 
-  // Read plan data (assuming plan ID 1 exists)
+  // Read plan data
   const { data: plan } = useReadContract({
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'getPlan',
     args: [1n],
-    chainId: somniaTestnet.id,
+    query: { enabled: mounted },
   })
 
   // Subscribe transaction
-  const { writeContract: subscribe, isPending: isSubscribing, data: subscribeHash, error: subscribeError } = useWriteContract({
-    mutation: {
-      onError: (error) => {
-        console.error('Subscribe transaction error:', error)
-      },
-      onSuccess: (data) => {
-        console.log('Subscribe transaction sent:', data)
-      }
-    }
-  })
+  const { writeContract: subscribe, isPending: isSubscribing } = useWriteContract()
 
   // Cancel transaction
-  const { writeContract: cancel, isPending: isCancelling, data: cancelHash } = useWriteContract({
-    mutation: {
-      onError: (error) => {
-        console.error('Cancel transaction error:', error)
-      }
-    }
-  })
-
-  // Wait for transactions
-  const { isLoading: isSubscribeConfirming } = useWaitForTransactionReceipt({
-    hash: subscribeHash,
-  })
-
-  const { isLoading: isCancelConfirming } = useWaitForTransactionReceipt({
-    hash: cancelHash,
-  })
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // Update balance periodically
-  useEffect(() => {
-    if (subscription && subscription[3]) { // active
-      const updateBalance = () => {
-        const timeElapsed = BigInt(Math.floor(Date.now() / 1000)) - subscription[2] // lastUpdate
-        const pricePerSecond = plan?.[0] || 0n
-        const cost = timeElapsed * pricePerSecond
-        const currentBalance = subscription[1] - cost
-        setBalance(formatEther(currentBalance > 0n ? currentBalance : 0n))
-      }
-
-      updateBalance()
-      const interval = setInterval(updateBalance, 1000)
-      return () => clearInterval(interval)
-    }
-  }, [subscription, plan])
+  const { writeContract: cancel, isPending: isCancelling } = useWriteContract()
 
   const handleSubscribe = () => {
-    console.log('Subscribing with amount:', amount)
     subscribe({
       address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
       abi: SUBSCRIPTION_MANAGER_ABI,
@@ -99,8 +56,6 @@ export default function SubscribeCard() {
     })
   }
 
-  const isActive = subscription?.[3] || false
-
   if (!mounted) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -112,6 +67,8 @@ export default function SubscribeCard() {
       </div>
     )
   }
+
+  const isActive = subscription?.[3] || false
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -128,9 +85,7 @@ export default function SubscribeCard() {
         <div className="space-y-4">
           <div className="p-4 bg-green-50 border border-green-200 rounded">
             <p className="text-green-800 font-semibold">✅ Active Subscription</p>
-            <p className="text-sm text-green-600">
-              Balance: {balance} ETH
-            </p>
+            <p className="text-sm text-green-600">Balance: {formatEther(subscription[1])} ETH</p>
           </div>
           
           <div className="space-y-2">
@@ -144,19 +99,19 @@ export default function SubscribeCard() {
             />
             <button
               onClick={handleSubscribe}
-              disabled={isSubscribing || isSubscribeConfirming}
+              disabled={isSubscribing}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg"
             >
-              {isSubscribing || isSubscribeConfirming ? 'Adding...' : 'Add Balance'}
+              {isSubscribing ? 'Adding...' : 'Add Balance'}
             </button>
           </div>
 
           <button
             onClick={handleCancel}
-            disabled={isCancelling || isCancelConfirming}
+            disabled={isCancelling}
             className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg"
           >
-            {isCancelling || isCancelConfirming ? 'Cancelling...' : 'Cancel Subscription'}
+            {isCancelling ? 'Cancelling...' : 'Cancel Subscription'}
           </button>
         </div>
       ) : (
@@ -171,10 +126,10 @@ export default function SubscribeCard() {
           />
           <button
             onClick={handleSubscribe}
-            disabled={isSubscribing || isSubscribeConfirming}
+            disabled={isSubscribing}
             className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg"
           >
-            {isSubscribing || isSubscribeConfirming ? 'Subscribing...' : 'Subscribe Now'}
+            {isSubscribing ? 'Subscribing...' : 'Subscribe Now'}
           </button>
         </div>
       )}

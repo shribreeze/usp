@@ -1,18 +1,73 @@
 export const SUBSCRIPTION_MANAGER_ABI = [
-  "function createPlan(string memory _name, uint256 _pricePerSecond) external",
-  "function subscribe(uint256 _planId) external payable",
-  "function cancel() external",
-  "function checkAccess(address _user) external view returns (bool)",
-  "function getSubscription(address _user) external view returns (tuple(uint256 planId, uint256 balance, uint256 lastUpdate, bool active))",
-  "function getPlan(uint256 _planId) external view returns (tuple(uint256 pricePerSecond, bool active, string name))",
-  "function updateBalance(address _user) external",
-  "event Subscribed(address indexed user, uint256 indexed planId, uint256 amount)",
-  "event Cancelled(address indexed user, uint256 indexed planId)",
-  "event BalanceUpdated(address indexed user, uint256 newBalance)"
+  {
+    "type": "function",
+    "name": "createPlan",
+    "inputs": [
+      {"name": "_name", "type": "string"},
+      {"name": "_pricePerSecond", "type": "uint256"}
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "subscribe",
+    "inputs": [{"name": "_planId", "type": "uint256"}],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "cancel",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "checkAccess",
+    "inputs": [{"name": "_user", "type": "address"}],
+    "outputs": [{"name": "", "type": "bool"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getSubscription",
+    "inputs": [{"name": "_user", "type": "address"}],
+    "outputs": [
+      {"name": "planId", "type": "uint256"},
+      {"name": "balance", "type": "uint256"},
+      {"name": "lastUpdate", "type": "uint256"},
+      {"name": "active", "type": "bool"}
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getPlan",
+    "inputs": [{"name": "_planId", "type": "uint256"}],
+    "outputs": [
+      {"name": "pricePerSecond", "type": "uint256"},
+      {"name": "active", "type": "bool"},
+      {"name": "name", "type": "string"}
+    ],
+    "stateMutability": "view"
+  }
 ] as const
 
 export const NFT_ACCESS_PASS_ABI = [
-  "function hasAccess(address _user) external view returns (bool)",
-  "function userTokens(address _user) external view returns (uint256)",
-  "function balanceOf(address owner) external view returns (uint256)"
+  {
+    "type": "function",
+    "name": "hasAccess",
+    "inputs": [{"name": "_user", "type": "address"}],
+    "outputs": [{"name": "", "type": "bool"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "balanceOf",
+    "inputs": [{"name": "owner", "type": "address"}],
+    "outputs": [{"name": "", "type": "uint256"}],
+    "stateMutability": "view"
+  }
 ] as const
