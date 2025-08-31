@@ -3,6 +3,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { metaMask } from 'wagmi/connectors'
 import SubscribeCard from '../components/SubscribeCard'
 import GatedContent from '../components/GatedContent'
+import WalletInfo from '../components/WalletInfo'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -68,14 +69,17 @@ export default function Home() {
         </header>
 
         {isConnected && (
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Subscription Plans</h2>
-              <SubscribeCard />
-            </div>
+          <div>
+            <WalletInfo />
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Subscription Plans</h2>
+                <SubscribeCard />
+              </div>
             <div>
               <h2 className="text-2xl font-bold mb-6">Premium Content</h2>
               <GatedContent />
+            </div>
             </div>
           </div>
         )}

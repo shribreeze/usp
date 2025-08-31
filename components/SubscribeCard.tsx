@@ -60,7 +60,7 @@ export default function SubscribeCard() {
   // Live balance countdown - use hardcoded price since plan call fails
   useEffect(() => {
     if (subscription && subscription[3]) { // active subscription
-      const pricePerSecond = 1000000000000n // 0.000001 STT per second (from deploy script)
+      const pricePerSecond = 100000000000n // 0.0000001 STT per second
       const updateBalance = () => {
         const now = BigInt(Math.floor(Date.now() / 1000))
         const timeElapsed = now - subscription[2]
@@ -122,7 +122,7 @@ export default function SubscribeCard() {
           <li>• NFT grants instant access</li>
         </ul>
         <p className="text-xs text-blue-600 mt-2">
-          Rate: 0.000001 STT/second | Plan: Premium Plan
+          Rate: 0.0000001 STT/second | Plan: Premium Plan
         </p>
       </div>
 
