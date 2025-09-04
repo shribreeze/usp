@@ -6,6 +6,7 @@ import GatedContent from '../components/GatedContent'
 import WalletInfo from '../components/WalletInfo'
 import Features from '../components/features'
 import Hero from '../components/hero'
+import Footer from '../components/Footer'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -41,6 +42,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100">
       <Hero />
       <Features />
+      <Footer />
     </div> 
   )
 }

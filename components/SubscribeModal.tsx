@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { X } from 'lucide-react'
 import SubscribeCard from './SubscribeCard'
 import WalletInfo from './WalletInfo'
+import { cn } from '../lib/utils'
 
 interface SubscribeModalProps {
   isOpen: boolean
@@ -12,76 +12,86 @@ export default function SubscribeModal({ isOpen, onClose }: SubscribeModalProps)
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
       
       {/* Modal */}
-      <div className="relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 p-6">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-        >
-          <X size={24} />
-        </button>
+      <div 
+        className={cn(
+          "relative rounded-lg border shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden",
+          "border-[color:var(--usp-foreground)]/20 bg-[color:var(--usp-bg)]"
+        )}
+        style={{
+          ["--usp-blue" as any]: "#00B2FF",
+          ["--usp-purple" as any]: "#7A5CFF",
+          ["--usp-pink" as any]: "#FF3D9A",
+          ["--usp-bg" as any]: "#0B0F1A",
+          ["--usp-foreground" as any]: "#F5F7FA",
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-[color:var(--usp-foreground)]/10">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[color:var(--usp-blue)] via-[color:var(--usp-purple)] to-[color:var(--usp-pink)] flex items-center justify-center">
+              <span className="text-white text-sm">🚀</span>
+            </div>
+            <h2 className="text-xl font-semibold text-[color:var(--usp-foreground)]">
+              Universal Subscription
+            </h2>
+          </div>
+          
+          <button
+            onClick={onClose}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              "text-[color:var(--usp-foreground)]/60 hover:text-[color:var(--usp-foreground)]",
+              "hover:bg-[color:var(--usp-foreground)]/10"
+            )}
+          >
+            <X size={20} />
+          </button>
+        </div>
 
         {/* Content */}
-         <div className="pr-8 overflow-y-auto max-h-[80vh]">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Universal Subscription Plans
-          </h2>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
           <WalletInfo />
           <SubscribeCard />
-          {/*<h2 className="text-2xl font-bold text-gray-900 mb-4">
-            🚀 Universal Subscription Protocol
-          </h2>
           
-          <div className="space-y-4 text-gray-700">
-            <div>
-              <h3 className="font-semibold text-lg mb-2">💡 How it works:</h3>
-              <ul className="space-y-2 text-sm">
-                <li>• <strong>Stream payments per second</strong> - Pay only for what you use</li>
-                <li>• <strong>Instant NFT access</strong> - Get premium content immediately</li>
-                <li>• <strong>Cancel anytime</strong> - Get refund of remaining balance</li>
-                <li>• <strong>Fully on-chain</strong> - Transparent and decentralized</li>
-              </ul>
-            </div>
-
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">📊 Pricing</h4>
-              <p className="text-sm text-blue-800">
-                <strong>0.0000001 STT per second</strong><br/>
-                That's only ~0.0086 STT per day!
-              </p>
-            </div>
-
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-2">🎁 What you get</h4>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>✅ Premium content access</li>
-                <li>✅ NFT Access Pass</li>
-                <li>✅ Real-time balance tracking</li>
-                <li>✅ Instant cancellation</li>
-              </ul>
+          {/* Info section */}
+          <div className="mt-6 p-4 rounded-lg border border-[color:var(--usp-blue)]/20 bg-[color:var(--usp-blue)]/5">
+            <h3 className="font-medium text-[color:var(--usp-blue)] mb-3">🎯 What you get:</h3>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">✅</span>
+                <span className="text-[color:var(--usp-foreground)]/80">Premium content</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">✅</span>
+                <span className="text-[color:var(--usp-foreground)]/80">NFT Access Pass</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">✅</span>
+                <span className="text-[color:var(--usp-foreground)]/80">Real-time tracking</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">✅</span>
+                <span className="text-[color:var(--usp-foreground)]/80">Instant cancellation</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 mb-4">
-              Connect your wallet and scroll down to start subscribing!
-            </p>
-            <button
-              onClick={onClose}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors"
-            >
-              Got it! Let's go 🎉
-            </button>
-          </div>*/}
-        </div> 
+        {/* Gradient overlay */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            background: "radial-gradient(ellipse at top right, rgba(0,178,255,0.1) 0%, transparent 50%)"
+          }}
+        />
       </div>
     </div>
   )

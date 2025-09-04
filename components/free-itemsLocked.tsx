@@ -6,8 +6,6 @@ type VideoCard = {
   duration?: string
 }
 
-import { Wallet } from "lucide-react";
-import { BsWallet2 } from "react-icons/bs";
 
 const FREE_VIDEOS: VideoCard[] = [
   {
@@ -63,9 +61,7 @@ export function FreeItemsLocked() {
                 {/* Play overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                   <div className="text-center">
-                    <div className="flex justify-center mb-2">
-                        <BsWallet2 className="w-10 h-10 text-white" />
-                    </div>
+                    <div className="text-4xl mb-2">💳</div>
                     <p className="text-white text-sm font-medium">Connect to Wallet</p>
                   </div>
                 </div>
