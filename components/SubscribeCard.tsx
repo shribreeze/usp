@@ -19,20 +19,9 @@ export default function SubscribeCard() {
     address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
     abi: SUBSCRIPTION_MANAGER_ABI,
     functionName: 'getSubscription',
-    args: [address!],
+    args: address ? [address] : undefined,
     query: { enabled: !!address && mounted },
   })
-
-  // Read plan data
-  const { data: plan, refetch: refetchPlan } = useReadContract({
-    address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
-    abi: SUBSCRIPTION_MANAGER_ABI,
-    functionName: 'getPlan',
-    args: [1n],
-    query: { enabled: mounted },
-  })
-
-
 
   // Subscribe transaction
   const { writeContract: subscribe, isPending: isSubscribing, data: subscribeHash } = useWriteContract()
@@ -57,9 +46,9 @@ export default function SubscribeCard() {
     }
   }, [subscribeSuccess, cancelSuccess, refetchSubscription])
 
-  // Live balance countdown - use hardcoded price since plan call fails
+  // Live balance countdown
   useEffect(() => {
-    if (subscription && subscription[3]) { // active subscription
+    if (subscription && subscription[3]) {
       const pricePerSecond = 100000000000n // 0.0000001 STT per second
       const updateBalance = () => {
         const now = BigInt(Math.floor(Date.now() / 1000))
@@ -78,21 +67,23 @@ export default function SubscribeCard() {
   }, [subscription])
 
   const handleSubscribe = () => {
+    if (!address) return
     subscribe({
       address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
       abi: SUBSCRIPTION_MANAGER_ABI,
       functionName: 'subscribe',
       args: [1n],
       value: parseEther(amount),
-    })
+    } as any)
   }
 
   const handleCancel = () => {
+    if (!address) return
     cancel({
       address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
       abi: SUBSCRIPTION_MANAGER_ABI,
       functionName: 'cancel',
-    })
+    } as any)
   }
 
   if (!mounted) {
@@ -110,7 +101,7 @@ export default function SubscribeCard() {
   const isActive = subscription?.[3] || false
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-[color:var(--usp-bg)] rounded-lg shadow-lg p-6">
       <h3 className="text-xl font-bold mb-4">Premium Plan</h3>
       
       <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -147,7 +138,7 @@ export default function SubscribeCard() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Amount to add (STT)"
-              className="w-full p-3 border border-gray-300 rounded-lg"
+              className="w-full text-black p-3 border border-gray-300 rounded-lg"
             />
             <button
               onClick={handleSubscribe}
@@ -160,10 +151,7 @@ export default function SubscribeCard() {
 
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                refetchSubscription()
-                refetchPlan()
-              }}
+              onClick={() => refetchSubscription()}
               className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-sm"
             >
               🔄 Refresh
@@ -185,7 +173,7 @@ export default function SubscribeCard() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Amount (STT)"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full text-black p-3 border border-gray-300 rounded-lg"
           />
           <button
             onClick={handleSubscribe}

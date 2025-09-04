@@ -4,6 +4,8 @@ import { metaMask } from 'wagmi/connectors'
 import SubscribeCard from '../components/SubscribeCard'
 import GatedContent from '../components/GatedContent'
 import WalletInfo from '../components/WalletInfo'
+import Features from '../components/features'
+import Hero from '../components/hero'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -37,7 +39,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8">
+      <Hero />
+      <Features />
+      {/* <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Universal Subscription Protocol
@@ -66,11 +70,11 @@ export default function Home() {
               </button>
             </div>
           )}
-        </header>
+        </header>*/}
 
         {isConnected && (
           <div>
-            <WalletInfo />
+            {/* <WalletInfo />
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h2 className="text-2xl font-bold mb-6">Subscription Plans</h2>
@@ -80,10 +84,10 @@ export default function Home() {
               <h2 className="text-2xl font-bold mb-6">Premium Content</h2>
               <GatedContent />
             </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
-    </div>
+    // </div> 
   )
 }

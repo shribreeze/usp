@@ -42,7 +42,7 @@ export default function GatedContent() {
 
   if (!mounted) {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-[color:var(--usp-bg)] rounded-lg shadow-lg p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-4 bg-gray-200 rounded w-3/4"></div>
           <div className="h-20 bg-gray-200 rounded"></div>
@@ -55,7 +55,7 @@ export default function GatedContent() {
 
   if (!hasAccess || nftBalance === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-[color:var(--usp-bg)] rounded-lg shadow-lg p-6">
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🔒</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Premium Content Locked</h3>
@@ -68,7 +68,7 @@ export default function GatedContent() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-[color:var(--usp-bg)] rounded-lg shadow-lg p-6">
       <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
         <p className="text-green-800 font-semibold">🎉 Access Granted! NFT Pass Active</p>
       </div>
