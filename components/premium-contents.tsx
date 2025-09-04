@@ -16,7 +16,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Advanced Workflows & Automation",
     href: "https://example.com/videos/advanced-workflows",
-    thumb: "/advanced-workflows-automation-thumbnail.png",
+    thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Advanced Workflows & Automation",
     tag: "Premium",
     duration: "9:27",
@@ -24,7 +24,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Scaling Best Practices",
     href: "https://example.com/videos/scaling",
-    thumb: "/scaling-best-practices-thumbnail.png",
+    thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Scaling Best Practices",
     tag: "Premium",
     duration: "8:10",
@@ -32,7 +32,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Security & Compliance Deep Dive",
     href: "https://example.com/videos/security",
-    thumb: "/security-and-compliance-deep-dive-thumbnail.png",
+    thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Security & Compliance",
     tag: "Premium",
     duration: "11:03",
