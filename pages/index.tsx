@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Head from 'next/head'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { metaMask } from 'wagmi/connectors'
 import SubscribeCard from '../components/SubscribeCard'
@@ -39,10 +40,19 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Hero />
-      <Features />
-      <Footer />
-    </div> 
+    <>
+      <Head>
+        <title>Universal Subscription Protocol - The Stripe of Web3</title>
+        <meta name="description" content="On-chain, pay-as-you-go subscriptions with streaming payments and NFT access control. Cancel anytime." />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      
+      <div className="min-h-screen bg-gray-100">
+        <Hero />
+        <Features />
+        <Footer />
+      </div>
+    </>
   )
 }
