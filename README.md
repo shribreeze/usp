@@ -1,50 +1,76 @@
 # Universal Subscription Protocol (USP)
 *The Stripe of Web3 - Fully On-Chain Subscriptions*
 
-## Overview
-USP is a decentralized subscription protocol built on Somnia Network that enables streaming payments and NFT-based access control.
+## 🚀 Overview
+USP is a decentralized subscription protocol built on **Somnia Network** that enables streaming payments and NFT-based access control. Pay per second, cancel anytime, get instant refunds.
 
-## Features
-- ⚡ Real-time streaming payments (per-second billing)
-- 🎫 NFT Access Pass for gated content
-- 💰 Instant subscription cancellation with refunds
-- 🔒 Fully on-chain access control
-- 📱 Modern Web3 frontend with live balance updates
+## ✨ Features
+- ⚡ **Real-time streaming payments** - Pay 0.0000001 STT per second
+- 🎫 **NFT Access Pass** - Automatic minting/burning for gated content
+- 💰 **Instant cancellation** - Get refund of remaining balance
+- 🔒 **Fully on-chain** - Transparent and decentralized
+- 📱 **Modern Web3 UI** - Live balance updates and responsive design
 
-## Quick Start
+## 🎯 Live Demo
+**Deployed on Vercel:** [https://usp-somnia.vercel.app]
 
-### 1. Install Dependencies
+**Contract Addresses (Somnia Testnet):**
+- SubscriptionManager: `0x5bB5f5C706904F2D3e205a1dC9EE1dff91B86CfF`
+- NFTAccessPass: `0x2F58Cdb7d6DCD17A281f14f1aD935804Fc3cc1c9`
+
+## 🛠 Quick Start
+
+### 1. Clone & Install
 ```bash
-npm install
+git clone https://github.com/shribreeze/usp.git
+cd usp-project/usp
+pnpm install
 ```
 
-### 2. Deploy Contracts
+### 2. Environment Setup
 ```bash
-# Install Hardhat dependencies
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+# Create .env file
+echo "PRIVATE_KEY=your-private-key-here" > .env
+```
 
-# Set your private key
-export PRIVATE_KEY="your-private-key-here"
-
+### 3. Deploy Contracts (Optional)
+```bash
 # Deploy to Somnia testnet
 npx hardhat run scripts/deploy.js --network somniaTestnet
-```
 
-### 3. Update Contract Addresses
-Update `lib/config.ts` with deployed contract addresses:
-```typescript
-export const CONTRACTS = {
-  SUBSCRIPTION_MANAGER: '0xYourSubscriptionManagerAddress',
-  NFT_ACCESS_PASS: '0xYourNFTAccessPassAddress',
-}
+# Update lib/config.ts with new addresses
 ```
 
 ### 4. Run Frontend
 ```bash
-npm run dev
+pnpm run dev
+# Open http://localhost:3000
 ```
 
-## Smart Contracts
+## 🏗 Architecture
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Next.js UI    │    │ SubscriptionMgr  │    │  NFTAccessPass  │
+│   (Frontend)    │◄──►│   (Streaming)    │◄──►│   (ERC-721)     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │              ┌────────▼────────┐             │
+         └─────────────►│  Somnia Network │◄────────────┘
+                        │   (Testnet)     │
+                        └─────────────────┘
+```
+
+## 💡 How It Works
+
+1. **Connect Wallet** - MetaMask to Somnia testnet
+2. **Subscribe** - Pay STT to start streaming subscription  
+3. **Get NFT** - Receive Access Pass NFT automatically
+4. **Access Content** - Premium features unlock instantly
+5. **Live Updates** - Watch balance decrease in real-time (0.0000001 STT/sec)
+6. **Cancel Anytime** - Get refund of remaining balance
+
+## 🔧 Smart Contracts
 
 ### SubscriptionManager.sol
 - Creates subscription plans with per-second pricing
@@ -58,19 +84,30 @@ npm run dev
 - Burned when subscription ends
 - Used for access control in dApps
 
-## Frontend Components
+## 🌐 Network Configuration
 
-### SubscribeCard.tsx
-- Subscribe/cancel subscription interface
-- Live balance updates every second
-- Add balance to existing subscriptions
+### Somnia Testnet
+- **Chain ID:** 50312
+- **RPC:** https://dream-rpc.somnia.network
+- **Explorer:** https://shannon-explorer.somnia.network
+- **Currency:** STT
 
-### GatedContent.tsx
-- Example premium content area
-- Checks both subscription status and NFT ownership
-- Demonstrates access control integration
+**Add to MetaMask:**
+```json
+{
+  "chainId": "0xC458",
+  "chainName": "Somnia Testnet",
+  "rpcUrls": ["https://dream-rpc.somnia.network"],
+  "nativeCurrency": {
+    "name": "STT",
+    "symbol": "STT",
+    "decimals": 18
+  },
+  "blockExplorerUrls": ["https://shannon-explorer.somnia.network"]
+}
+```
 
-## SDK Usage
+## 📦 SDK Usage
 
 ```typescript
 import { createUSPClient } from './lib/usp-sdk'
@@ -78,7 +115,7 @@ import { createUSPClient } from './lib/usp-sdk'
 const uspClient = createUSPClient(provider, managerAddress, nftAddress, signer)
 
 // Subscribe to plan
-await uspClient.subscribe(1, "0.1") // Plan 1, 0.1 ETH
+await uspClient.subscribe(1, "0.01") // Plan 1, 0.01 STT
 
 // Check access
 const hasAccess = await uspClient.checkAccess(userAddress)
@@ -87,58 +124,72 @@ const hasAccess = await uspClient.checkAccess(userAddress)
 await uspClient.cancelSubscription()
 ```
 
-## Network Configuration
+## 🎨 Frontend Components
 
-### Somnia Testnet
-- Chain ID: 50311
-- RPC: https://testnet.somnia.network
-- Explorer: https://testnet-explorer.somnia.network
-- Currency: STT
+### Key Components
+- **Hero.tsx** - Landing page with gradient background
+- **SubscribeCard.tsx** - Subscription interface with live updates
+- **SubscribeModal.tsx** - Popup subscription flow
+- **WalletInfo.tsx** - Connected wallet details
+- **GatedContent.tsx** - Premium content with access control
+- **Footer.tsx** - Responsive footer with links
 
-Add to MetaMask:
-1. Network Name: Somnia Testnet
-2. RPC URL: https://testnet.somnia.network
-3. Chain ID: 50311
-4. Symbol: STT
+### Design System
+- **Colors:** Blue (#00B2FF), Purple (#7A5CFF), Pink (#FF3D9A)
+- **Theme:** Dark background (#0B0F1A) with light text (#F5F7FA)
+- **Gradients:** Used throughout for buttons and accents
 
-## Architecture
+## 🚀 Deployment
 
+### Vercel Deployment
+1. Connect GitHub repository to Vercel
+2. Set **Root Directory** to `usp`
+3. Deploy automatically on push
+
+### Environment Variables
+```bash
+PRIVATE_KEY=your-private-key-for-contract-deployment
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Frontend      │    │ SubscriptionMgr  │    │  NFTAccessPass  │
-│   (Next.js)     │◄──►│   (Streaming)    │◄──►│   (ERC-721)     │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         │              ┌────────▼────────┐             │
-         └─────────────►│  Somnia Network │◄────────────┘
-                        │   (EVM Layer)   │
-                        └─────────────────┘
+
+## 📁 Project Structure
+```
+usp/
+├── components/          # React components
+├── lib/                # Utilities and config
+├── pages/              # Next.js pages
+├── public/             # Static assets
+├── contracts/          # Smart contracts
+├── scripts/            # Deployment scripts
+└── styles/             # CSS styles
 ```
 
-## Demo Flow
-
-1. **Connect Wallet** - MetaMask to Somnia testnet
-2. **Subscribe** - Pay ETH to start streaming subscription
-3. **Get NFT** - Receive Access Pass NFT automatically
-4. **Access Content** - Premium features unlock instantly
-5. **Live Updates** - Watch balance decrease in real-time
-6. **Cancel Anytime** - Get refund of remaining balance
-
-## Development
+## 🛠 Development Commands
 
 ```bash
-# Install dependencies
-npm install
+# Development
+npm run dev              # Start dev server
+npm run build           # Build for production
+npm run start           # Start production server
 
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Deploy contracts
+# Smart Contracts
+npx hardhat compile     # Compile contracts
+npx hardhat test        # Run tests
 npx hardhat run scripts/deploy.js --network somniaTestnet
 ```
 
-## License
-MIT
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+
+## 🔗 Links
+- **Website:** [https://usp-somnia.vercel.app](https://usp-somnia.vercel.app)
+- **GitHub:** [https://github.com/shribreeze/usp](https://github.com/shribreeze/usp)
+- **Somnia Network:** [https://somnia.network](https://somnia.network)
+
+---
+Built with ❤️ on Somnia Network 
