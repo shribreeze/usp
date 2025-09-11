@@ -32,7 +32,7 @@ export default function Features() {
     <section
       id="features"
       className={cn(
-        "relative z-10 w-full px-6 py-16 md:py-24", // w-full (full-bleed) and padding stays here
+        "relative w-full px-6 py-16 md:py-24", // w-full (full-bleed) and padding stays here
         "bg-[color:var(--usp-bg)]", // apply dark background token
         "text-[color:var(--usp-foreground)]",
       )}

@@ -21,10 +21,19 @@ async function main() {
   await nftAccessPass.setSubscriptionManager(await subscriptionManager.getAddress());
   console.log("NFT contract configured with SubscriptionManager");
 
-  // Create a sample plan
-  const pricePerSecond = hre.ethers.parseEther("0.0000001"); // 0.0000001 STT per second
-  await subscriptionManager.createPlan("Premium Plan", pricePerSecond);
-  console.log("Sample plan created");
+  // Create subscription plans
+  const silverPrice = hre.ethers.parseEther("0.0000001"); // 0.0000001 STT per second
+  await subscriptionManager.createPlan("Silver Plan", silverPrice);
+  console.log("Silver plan created");
+  
+  const goldPrice = hre.ethers.parseEther("0.00001"); // 0.00001 STT per second
+  await subscriptionManager.createPlan("Gold Plan", goldPrice);
+  console.log("Gold plan created");
+  
+  // Create AI pay-per-use plan
+  const aiPrice = hre.ethers.parseEther("0.000001"); // 0.000001 STT per AI request
+  await subscriptionManager.createPlan("AI Pay-Per-Use", aiPrice);
+  console.log("AI pay-per-use plan created");
 
   console.log("\n=== Deployment Complete ===");
   console.log("NFTAccessPass:", await nftAccessPass.getAddress());

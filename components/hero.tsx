@@ -8,6 +8,7 @@ import SubscribeCard from '../components/SubscribeCard'
 import GatedContent from '../components/GatedContent'
 import WalletInfo from '../components/WalletInfo'
 import SubscribeModal from '../components/SubscribeModal'
+import AIChat from '../components/AIChat'
 
 import Link from "next/link"
 import { cn } from "../lib/utils"
@@ -133,6 +134,9 @@ export default function Hero() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
       />
+      
+      {/* AI Chat */}
+      <AIChat />
     </section>
   )
 }
