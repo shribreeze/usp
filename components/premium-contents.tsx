@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAccount, useReadContract } from 'wagmi'
 import { CONTRACTS, somniaTestnet } from '../lib/config'
 import { SUBSCRIPTION_MANAGER_ABI, NFT_ACCESS_PASS_ABI } from '../lib/contracts'
-import AIAssistant from './AIAssistant'
+
 
 type VideoCard = {
   title: string
@@ -17,7 +17,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Advanced Workflows & Automation",
     href: "https://example.com/videos/advanced-workflows",
-    thumb: "/advanced-workflows-automation-thumbnail.png",
+    thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Advanced Workflows & Automation",
     tag: "Premium",
     duration: "9:27",
@@ -25,7 +25,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Scaling Best Practices",
     href: "https://example.com/videos/scaling",
-    thumb: "/scaling-best-practices-thumbnail.png",
+    thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Scaling Best Practices",
     tag: "Premium",
     duration: "8:10",
@@ -33,7 +33,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Security & Compliance Deep Dive",
     href: "https://example.com/videos/security",
-    thumb: "/security-and-compliance-deep-dive-thumbnail.png",
+    thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Security & Compliance",
     tag: "Premium",
     duration: "11:03",
@@ -43,7 +43,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
 export function PremiumContents() {
     const { address } = useAccount()
     const [mounted, setMounted] = useState(false)
-    const [isAIOpen, setIsAIOpen] = useState(false)
+
     
     useEffect(() => {
       setMounted(true)
@@ -141,8 +141,7 @@ export function PremiumContents() {
   }
 
   return (
-    <>
-      <section aria-labelledby="premium-contents-heading" className="w-full mt-24">
+    <section aria-labelledby="premium-contents-heading" className="w-full mt-24">
         <header className="mb-4 md:mb-6">
           <h2 id="premium-contents-heading" className="text-xl md:text-2xl font-semibold text-pretty">
             Premium contents
@@ -206,8 +205,5 @@ export function PremiumContents() {
           ))}
         </ul>
       </section>
-
-      <AIAssistant isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
-    </>
   )
 }

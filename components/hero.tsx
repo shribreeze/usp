@@ -4,11 +4,9 @@ import type React from "react"
 import { useState, useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { metaMask } from 'wagmi/connectors'
-import SubscribeCard from '../components/SubscribeCard'
-import GatedContent from '../components/GatedContent'
-import WalletInfo from '../components/WalletInfo'
 import SubscribeModal from '../components/SubscribeModal'
-import AIChat from '../components/AIChat'
+import AIFloatingButton from '../components/AIFloatingButton'
+import GlobalToastProvider from '../components/GlobalToastProvider'
 
 import Link from "next/link"
 import { cn } from "../lib/utils"
@@ -48,19 +46,20 @@ export default function Hero() {
   }
 
   return (
-    <section
-      className={cn("relative overflow-hidden", "bg-[color:var(--usp-bg)] text-[color:var(--usp-foreground)]")}
-      style={
-        {
-          // primary: blue, accents: purple + neon pink, neutrals: near-black + off-white
-          ["--usp-blue" as any]: "#00B2FF",
-          ["--usp-purple" as any]: "#7A5CFF",
-          ["--usp-pink" as any]: "#FF3D9A",
-          ["--usp-bg" as any]: "#0B0F1A",
-          ["--usp-foreground" as any]: "#F5F7FA",
-        } as React.CSSProperties
-      }
-    >
+    <GlobalToastProvider>
+      <section
+        className={cn("relative overflow-hidden", "bg-[color:var(--usp-bg)] text-[color:var(--usp-foreground)]")}
+        style={
+          {
+            // primary: blue, accents: purple + neon pink, neutrals: near-black + off-white
+            ["--usp-blue" as any]: "#00B2FF",
+            ["--usp-purple" as any]: "#7A5CFF",
+            ["--usp-pink" as any]: "#FF3D9A",
+            ["--usp-bg" as any]: "#0B0F1A",
+            ["--usp-foreground" as any]: "#F5F7FA",
+          } as React.CSSProperties
+        }
+      >
       <HeroBackground />
 
       <div className="relative mx-auto flex max-w-5xl flex-col items-center px-6 pb-24 pt-32 text-center md:pb-28 md:pt-40">
@@ -94,50 +93,28 @@ export default function Hero() {
             </button>
           </div>
           )}
-          {/* </div> */}
-
-          {/* <div> */}
           <button onClick={() => setIsModalOpen(true)}>
             <GlowButton href="" variant="outline">
               Subscribe Now
             </GlowButton>
           </button>
-          {/* </div> */}
-
         </div>
       </div>
 
-      {/* {isConnected && ( */}
-        {/* <div className="relative mx-auto flex max-w-5xl flex-col items-center px-6 pb-24 pt-32 text-center md:pb-28 md:pt-40">
-          <WalletInfo />
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Subscription Plans</h2>
-              <SubscribeCard />
-            </div>
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Premium Content</h2>
-            <GatedContent />
-          </div>
-          </div>
-        </div> */}
-      {/* )} */}
-
       <Content />
 
-      {/* Invisible anchors for smooth scrolling demo */}
       <div id="connect" className="sr-only" aria-hidden />
       <div id="subscribe" className="sr-only" aria-hidden />
       
-      {/* Subscribe Modal */}
       <SubscribeModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
       />
+    
+      <AIFloatingButton />
       
-      {/* AI Chat */}
-      <AIChat />
-    </section>
+      </section>
+    </GlobalToastProvider>
   )
 }
 

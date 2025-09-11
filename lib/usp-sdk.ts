@@ -69,6 +69,20 @@ export class USPClient {
     }
   }
 
+  // Get all available plans
+  async getAllPlans() {
+    const plans = []
+    for (let i = 1; i <= 3; i++) {
+      try {
+        const plan = await this.getPlan(i)
+        plans.push({ id: i, ...plan })
+      } catch (error) {
+        // Plan doesn't exist, skip
+      }
+    }
+    return plans
+  }
+
   // Check NFT ownership
   async hasNFTAccess(userAddress: string): Promise<boolean> {
     return await this.nftAccessPass.hasAccess(userAddress)
@@ -92,6 +106,37 @@ export class USPClient {
     const currentBalance = parseFloat(sub.balance) - cost
 
     return Math.max(0, currentBalance).toString()
+  }
+
+  // Calculate remaining time in seconds
+  async calculateRemainingTime(userAddress: string): Promise<number> {
+    const currentBalance = await this.calculateCurrentBalance(userAddress)
+    const sub = await this.getSubscription(userAddress)
+    
+    if (!sub.active || parseFloat(currentBalance) <= 0) return 0
+    
+    const plan = await this.getPlan(sub.planId)
+    return parseFloat(currentBalance) / parseFloat(plan.pricePerSecond)
+  }
+
+  // Pay for AI request (Plan 3)
+  async payForAI(amount: string = '0.000001'): Promise<ethers.TransactionResponse> {
+    if (!this.signer) throw new Error('Signer required for transactions')
+    
+    return await this.subscriptionManager.subscribe(3, {
+      value: ethers.parseEther(amount)
+    })
+  }
+
+  // Check if user has specific plan access
+  async hasPlanAccess(userAddress: string, planId: number): Promise<boolean> {
+    const sub = await this.getSubscription(userAddress)
+    return sub.active && sub.planId === planId
+  }
+
+  // Check if user has Gold plan access (for AI features)
+  async hasGoldAccess(userAddress: string): Promise<boolean> {
+    return await this.hasPlanAccess(userAddress, 2)
   }
 }
 

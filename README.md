@@ -5,18 +5,20 @@
 USP is a decentralized subscription protocol built on **Somnia Network** that enables streaming payments and NFT-based access control. Pay per second, cancel anytime, get instant refunds.
 
 ## ✨ Features
-- ⚡ **Real-time streaming payments** - Pay 0.0000001 STT per second
+- ⚡ **Multi-tier streaming payments** - Silver (0.0000001 STT/sec) & Gold (0.00001 STT/sec)
+- 🤖 **AI Chat Integration** - Gemini 2.0 Flash API with contextual responses
 - 🎫 **NFT Access Pass** - Automatic minting/burning for gated content
 - 💰 **Instant cancellation** - Get refund of remaining balance
+- ⏰ **Smart alerts** - 15-second expiry warnings with toast notifications
 - 🔒 **Fully on-chain** - Transparent and decentralized
-- 📱 **Modern Web3 UI** - Live balance updates and responsive design
+- 📱 **Modern Web3 UI** - Live balance countdown and responsive design
 
 ## 🎯 Live Demo
 **Deployed on Vercel:** [https://usp-somnia.vercel.app]
 
 **Contract Addresses (Somnia Testnet):**
-- SubscriptionManager: `0x5bB5f5C706904F2D3e205a1dC9EE1dff91B86CfF`
-- NFTAccessPass: `0x2F58Cdb7d6DCD17A281f14f1aD935804Fc3cc1c9`
+- SubscriptionManager: `0xC37011F5F79F26F4e19EBE7838b63A7754f66764`
+- NFTAccessPass: `0xf012e795f7f5670F8A2DfAdF14c92ACA647651b0`
 
 ## 🛠 Quick Start
 
@@ -64,11 +66,13 @@ pnpm run dev
 ## 💡 How It Works
 
 1. **Connect Wallet** - MetaMask to Somnia testnet
-2. **Subscribe** - Pay STT to start streaming subscription  
-3. **Get NFT** - Receive Access Pass NFT automatically
-4. **Access Content** - Premium features unlock instantly
-5. **Live Updates** - Watch balance decrease in real-time (0.0000001 STT/sec)
-6. **Cancel Anytime** - Get refund of remaining balance
+2. **Choose Plan** - Silver (premium content) or Gold (premium + AI chat)
+3. **Subscribe** - Pay STT to start streaming subscription  
+4. **Get NFT** - Receive Access Pass NFT automatically
+5. **Access Features** - Premium content + AI assistant (Gold only)
+6. **Live Updates** - Real-time balance countdown with smart alerts
+7. **AI Chat** - 5 free requests for Gold users, then pay-per-use
+8. **Cancel Anytime** - Get refund of remaining balance
 
 ## 🔧 Smart Contracts
 
@@ -114,11 +118,21 @@ import { createUSPClient } from './lib/usp-sdk'
 
 const uspClient = createUSPClient(provider, managerAddress, nftAddress, signer)
 
-// Subscribe to plan
-await uspClient.subscribe(1, "0.01") // Plan 1, 0.01 STT
+// Subscribe to Silver plan
+await uspClient.subscribe(1, "0.01") // Silver: 0.0000001 STT/sec
 
-// Check access
-const hasAccess = await uspClient.checkAccess(userAddress)
+// Subscribe to Gold plan
+await uspClient.subscribe(2, "0.01") // Gold: 0.00001 STT/sec
+
+// Check Gold access for AI features
+const hasGold = await uspClient.hasGoldAccess(userAddress)
+
+// Pay for AI request
+if (hasGold) await uspClient.payForAI()
+
+// Get real-time balance
+const balance = await uspClient.calculateCurrentBalance(userAddress)
+const timeLeft = await uspClient.calculateRemainingTime(userAddress)
 
 // Cancel subscription
 await uspClient.cancelSubscription()
@@ -128,10 +142,12 @@ await uspClient.cancelSubscription()
 
 ### Key Components
 - **Hero.tsx** - Landing page with gradient background
-- **SubscribeCard.tsx** - Subscription interface with live updates
+- **SubscribeCard.tsx** - Multi-plan interface with live countdown & alerts
 - **SubscribeModal.tsx** - Popup subscription flow
-- **WalletInfo.tsx** - Connected wallet details
-- **GatedContent.tsx** - Premium content with access control
+- **AIChatModal.tsx** - AI assistant with Gemini 2.0 Flash integration
+- **AIFloatingButton.tsx** - Floating AI access button for Gold users
+- **Toast.tsx** - Smart notification system for expiry alerts
+- **GatedContent.tsx** - Premium content with plan-based access control
 - **Footer.tsx** - Responsive footer with links
 
 ### Design System
@@ -177,6 +193,34 @@ npx hardhat test        # Run tests
 npx hardhat run scripts/deploy.js --network somniaTestnet
 ```
 
+## 🎯 Subscription Plans
+
+### 🥈 Silver Plan (ID: 1)
+- **Rate**: 0.0000001 STT per second
+- **Features**: Premium content access
+- **Duration**: ~28 hours for 0.01 STT
+- **Use Case**: Long-term content access
+
+### 🥇 Gold Plan (ID: 2)
+- **Rate**: 0.00001 STT per second  
+- **Features**: Premium content + AI chat + 5 free AI requests
+- **Duration**: ~2.8 hours for 0.01 STT
+- **Use Case**: Interactive experience with AI assistance
+
+### 🤖 AI Pay-per-use (ID: 3)
+- **Rate**: 0.000001 STT per request
+- **Features**: Individual AI requests for Gold users
+- **Use Case**: Additional AI interactions beyond free quota
+
+## 🤖 AI Integration
+
+- **Model**: Gemini 2.0 Flash API
+- **Context**: USP platform knowledge + Web3 expertise
+- **Access**: Gold plan subscribers only
+- **Free Quota**: 5 requests per Gold subscription
+- **Pay-per-use**: 0.000001 STT per additional request
+- **Features**: Auto-scroll, formatted responses, real-time chat
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -186,10 +230,17 @@ npx hardhat run scripts/deploy.js --network somniaTestnet
 5. Open Pull Request
 
 
+## 📚 Documentation
+
+- **SDK Integration**: [SDK-INTEGRATION.md](./SDK-INTEGRATION.md)
+- **Smart Contracts**: [contracts/](./contracts/)
+- **API Reference**: [pages/api/](./pages/api/)
+
 ## 🔗 Links
 - **Website:** [https://usp-somnia.vercel.app](https://usp-somnia.vercel.app)
 - **GitHub:** [https://github.com/shribreeze/usp](https://github.com/shribreeze/usp)
 - **Somnia Network:** [https://somnia.network](https://somnia.network)
+- **Gemini API:** [https://ai.google.dev](https://ai.google.dev)
 
 ---
-Built with ❤️ on Somnia Network 
+Built with ❤️ on Somnia Network | Powered by Gemini 2.0 Flash 

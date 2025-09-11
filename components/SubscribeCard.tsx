@@ -5,12 +5,14 @@ import { CONTRACTS, somniaTestnet } from '../lib/config'
 import { SUBSCRIPTION_MANAGER_ABI } from '../lib/contracts'
 import { cn } from '../lib/utils'
 
+
 export default function SubscribeCard() {
   const { address } = useAccount()
   const [amount, setAmount] = useState('0.01')
   const [balance, setBalance] = useState('0')
   const [mounted, setMounted] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(1)
+
 
   useEffect(() => {
     setMounted(true)
@@ -63,6 +65,19 @@ export default function SubscribeCard() {
         const cost = timeElapsed * pricePerSecond
         const currentBalance = subscription[1] - cost
         const balanceValue = currentBalance > 0n ? currentBalance : 0n
+        
+        // Calculate remaining seconds
+        const remainingBalance = Number(formatEther(balanceValue))
+        const pricePerSecondNum = Number(formatEther(pricePerSecond))
+        const remainingSeconds = remainingBalance / pricePerSecondNum
+        
+
+        
+        // Force refetch when balance reaches zero to update subscription status
+        if (balanceValue === 0n && subscription[3]) {
+          setTimeout(() => refetchSubscription(), 1000)
+        }
+        
         setBalance(formatEther(balanceValue))
       }
       updateBalance()
@@ -113,11 +128,13 @@ export default function SubscribeCard() {
     )
   }
 
-  const isActive = subscription?.[3] || false
+  // Check if subscription is truly active (has balance > 0)
+  const hasBalance = parseFloat(balance) > 0
+  const isActive = (subscription?.[3] || false) && hasBalance
   const currentPlan = subscription?.[0] ? Number(subscription[0]) : 0
 
   return (
-    <div 
+      <div 
       className={cn(
         "rounded-lg border p-6",
         "border-[color:var(--usp-foreground)]/10 bg-[color:var(--usp-foreground)]/5"
@@ -197,7 +214,7 @@ export default function SubscribeCard() {
         </div>
       )}
 
-      {isActive ? (
+      {(subscription?.[3] && hasBalance) ? (
         <div className="space-y-4">
           <div className="p-4 rounded-lg border border-green-200/50 bg-green-500/10">
             <div className="flex items-center gap-2 mb-2">
@@ -266,7 +283,58 @@ export default function SubscribeCard() {
             </button>
           </div>
         </div>
+      ) : subscription?.[3] && !hasBalance ? (
+        // Expired subscription - show add balance option
+        <div className="space-y-4">
+          <div className="p-4 rounded-lg border border-orange-200/50 bg-orange-500/10">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-orange-400">⏰</span>
+              <p className="font-medium text-orange-300">
+                {currentPlan === 1 ? '🥈 Silver Plan Expired' : '🥇 Gold Plan Expired'}
+              </p>
+            </div>
+            <p className="text-sm text-orange-400/80">
+              Add balance to reactivate your subscription
+            </p>
+          </div>
+          
+          <input
+            type="number"
+            step="0.01"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Amount to add (STT)"
+            className={cn(
+              "w-full p-3 rounded-lg border text-sm",
+              "border-[color:var(--usp-foreground)]/20 bg-[color:var(--usp-foreground)]/5",
+              "text-black placeholder-[color:var(--usp-foreground)]/50",
+              "focus:border-[color:var(--usp-blue)] focus:outline-none focus:ring-1 focus:ring-[color:var(--usp-blue)]"
+            )}
+          />
+          <button
+            onClick={() => {
+              if (!address) return
+              subscribe({
+                address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
+                abi: SUBSCRIPTION_MANAGER_ABI,
+                functionName: 'subscribe',
+                args: [BigInt(currentPlan)], // Use current expired plan
+                value: parseEther(amount),
+              } as any)
+            }}
+            disabled={isSubscribing}
+            className={cn(
+              "w-full py-3 px-4 rounded-lg font-medium text-sm transition-all",
+              "bg-gradient-to-r from-[color:var(--usp-blue)] to-[color:var(--usp-purple)]",
+              "text-white hover:scale-[1.02] active:scale-[0.98]",
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            )}
+          >
+            {isSubscribing ? 'Adding...' : 'Reactivate Subscription'}
+          </button>
+        </div>
       ) : (
+        // No subscription - show plan selection
         <div className="space-y-4">
           <input
             type="number"
@@ -302,6 +370,6 @@ export default function SubscribeCard() {
           </button>
         </div>
       )}
-    </div>
+      </div>
   )
 }
