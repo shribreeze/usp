@@ -1,9 +1,19 @@
 "use client"
 
 import type React from "react"
+
+// Extend Window interface for ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>
+    }
+  }
+}
 import { useState, useEffect } from 'react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi'
 import { metaMask } from 'wagmi/connectors'
+import { somniaTestnet } from '../lib/config'
 import SubscribeModal from '../components/SubscribeModal'
 import AIFloatingButton from '../components/AIFloatingButton'
 import GlobalToastProvider from '../components/GlobalToastProvider'
@@ -17,9 +27,28 @@ export default function Hero() {
 
   const [mounted, setMounted] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { address, isConnected } = useAccount()
+  const { address, isConnected, chain } = useAccount()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
+  const { switchChain } = useSwitchChain()
+  
+  const isCorrectNetwork = chain?.id === somniaTestnet.id
+  
+  const handleConnect = async () => {
+    try {
+      await connect({ connector: metaMask() })
+    } catch (error) {
+      console.error('Connection failed:', error)
+    }
+  }
+  
+  const handleSwitchNetwork = async () => {
+    try {
+      await switchChain({ chainId: somniaTestnet.id })
+    } catch (error) {
+      console.error('Network switch failed:', error)
+    }
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -76,22 +105,41 @@ export default function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
           {/* <div> */}
           {!isConnected ? (
-            <button onClick={() => connect({ connector: metaMask() })}>
-            <GlowButton href="" variant="primary">
-              Connect Wallet
-            </GlowButton>
-          </button>
-          ) : (
-            <div className="flex items-center gap-4">
-            <span className="bg-[color:var(--usp-bg)] text-sm text-gray-100">
-                Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
-            </span>
-            <button onClick={() => disconnect()}>
+            <button onClick={handleConnect}>
               <GlowButton href="" variant="primary">
-                Disconnect
+                Connect Wallet
               </GlowButton>
             </button>
-          </div>
+          ) : !isCorrectNetwork ? (
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 bg-orange-500/20 rounded-lg">
+                <span className="text-orange-400">⚠️</span>
+                <span className="text-sm text-orange-300">
+                  Please switch to Somnia Testnet
+                </span>
+              </div>
+              <button onClick={handleSwitchNetwork}>
+                <GlowButton href="" variant="primary">
+                  Switch to Somnia Testnet
+                </GlowButton>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center">
+                <span className="bg-[color:var(--usp-bg)] text-sm text-gray-100">
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </span>
+                <span className="text-xs text-green-400 flex items-center gap-1">
+                  Somnia Testnet
+                </span>
+              </div>
+              <button onClick={() => disconnect()}>
+                <GlowButton href="" variant="primary">
+                  Disconnect
+                </GlowButton>
+              </button>
+            </div>
           )}
           <button onClick={() => setIsModalOpen(true)}>
             <GlowButton href="" variant="outline">

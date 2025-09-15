@@ -44,19 +44,38 @@ export default function AIFloatingButton() {
   if (!mounted) return null
 
   // Show locked state if no Gold access
-  if (!hasGoldAccess) {
-    return (
-      <div 
-        className={cn(
-          "fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl z-40",
-          "bg-gray-600 opacity-50 cursor-not-allowed",
-          "flex items-center justify-center"
-        )}
-      >
-        <div className="text-2xl">🔒</div>
+if (!hasGoldAccess) {
+  return (
+    <div
+      className={cn(
+        "fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl z-40",
+        "bg-[color:var(--usp-bg)] border border-[color:var(--usp-foreground)]/20",
+        "flex items-center justify-center shadow-xl cursor-not-allowed overflow-hidden"
+      )}
+      style={{
+        ["--usp-blue" as any]: "#00B2FF",
+        ["--usp-purple" as any]: "#7A5CFF",
+        ["--usp-pink" as any]: "#FF3D9A",
+        ["--usp-bg" as any]: "#0B0F1A",
+        ["--usp-foreground" as any]: "#F5F7FA",
+      }}
+    >
+      {/* Glow ring */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--usp-blue)] via-[var(--usp-purple)] to-[var(--usp-pink)] opacity-40 blur-md animate-pulse"></div>
+
+      {/* Lock icon */}
+      <div className="relative z-10 text-2xl text-[color:var(--usp-foreground)] drop-shadow-[0_0_6px_rgba(0,178,255,0.6)] animate-bounce-slow">
+        🔒
       </div>
-    )
-  }
+
+      {/* Tooltip (optional) */}
+      <div className="absolute bottom-20 right-1/2 translate-x-1/2 bg-[var(--usp-bg)] border border-[var(--usp-foreground)]/20 text-[var(--usp-foreground)] text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+        Upgrade to Gold to Unlock ✨
+      </div>
+    </div>
+  );
+}
+
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
 import { CONTRACTS, somniaTestnet } from '../lib/config'
 import { SUBSCRIPTION_MANAGER_ABI } from '../lib/contracts'
@@ -7,7 +7,10 @@ import { cn } from '../lib/utils'
 
 
 export default function SubscribeCard() {
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
+  const { switchChain } = useSwitchChain()
+  
+  const isCorrectNetwork = chain?.id === somniaTestnet.id
   const [amount, setAmount] = useState('0.01')
   const [balance, setBalance] = useState('0')
   const [mounted, setMounted] = useState(false)
@@ -88,8 +91,17 @@ export default function SubscribeCard() {
     }
   }, [subscription])
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (!address) return
+    if (!isCorrectNetwork) {
+      try {
+        await switchChain({ chainId: somniaTestnet.id })
+        return
+      } catch (error) {
+        console.error('Network switch failed:', error)
+        return
+      }
+    }
     subscribe({
       address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
       abi: SUBSCRIPTION_MANAGER_ABI,
@@ -99,8 +111,17 @@ export default function SubscribeCard() {
     } as any)
   }
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (!address) return
+    if (!isCorrectNetwork) {
+      try {
+        await switchChain({ chainId: somniaTestnet.id })
+        return
+      } catch (error) {
+        console.error('Network switch failed:', error)
+        return
+      }
+    }
     cancel({
       address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
       abi: SUBSCRIPTION_MANAGER_ABI,
@@ -247,7 +268,7 @@ export default function SubscribeCard() {
             />
             <button
               onClick={handleSubscribe}
-              disabled={isSubscribing}
+              disabled={isSubscribing || !isCorrectNetwork}
               className={cn(
                 "w-full py-3 px-4 rounded-lg font-medium text-sm transition-all",
                 "bg-gradient-to-r from-[color:var(--usp-blue)] to-[color:var(--usp-purple)]",
@@ -255,7 +276,7 @@ export default function SubscribeCard() {
                 "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               )}
             >
-              {isSubscribing ? 'Adding...' : 'Add Balance'}
+              {!isCorrectNetwork ? 'Switch to Somnia Testnet' : isSubscribing ? 'Adding...' : 'Add Balance'}
             </button>
           </div>
 
@@ -312,8 +333,17 @@ export default function SubscribeCard() {
             )}
           />
           <button
-            onClick={() => {
+            onClick={async () => {
               if (!address) return
+              if (!isCorrectNetwork) {
+                try {
+                  await switchChain({ chainId: somniaTestnet.id })
+                  return
+                } catch (error) {
+                  console.error('Network switch failed:', error)
+                  return
+                }
+              }
               subscribe({
                 address: CONTRACTS.SUBSCRIPTION_MANAGER as `0x${string}`,
                 abi: SUBSCRIPTION_MANAGER_ABI,
@@ -330,7 +360,7 @@ export default function SubscribeCard() {
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             )}
           >
-            {isSubscribing ? 'Adding...' : 'Reactivate Subscription'}
+            {!isCorrectNetwork ? 'Switch to Somnia Testnet' : isSubscribing ? 'Adding...' : 'Reactivate Subscription'}
           </button>
         </div>
       ) : (
@@ -351,7 +381,7 @@ export default function SubscribeCard() {
           />
           <button
             onClick={handleSubscribe}
-            disabled={isSubscribing}
+            disabled={isSubscribing || !isCorrectNetwork}
             className={cn(
               "w-full py-3 px-4 rounded-lg font-medium transition-all",
               selectedPlan === 2 
@@ -366,7 +396,7 @@ export default function SubscribeCard() {
                 : "0 0 20px rgba(0,178,255,0.3)"
             }}
           >
-            {isSubscribing ? 'Subscribing...' : `Subscribe to ${selectedPlan === 1 ? 'Silver' : 'Gold'} Plan`}
+            {!isCorrectNetwork ? 'Switch to Somnia Testnet' : isSubscribing ? 'Subscribing...' : `Subscribe to ${selectedPlan === 1 ? 'Silver' : 'Gold'} Plan`}
           </button>
         </div>
       )}
