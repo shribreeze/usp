@@ -20,4 +20,4 @@ pnpm-debug.log*
 *.log
 *.tsbuildinfo
 *.env*
-.next
+.next*

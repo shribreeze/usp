@@ -128,7 +128,7 @@ export default function Hero() {
             <div className="flex items-center gap-4">
               <div className="flex flex-col items-center">
                 <span className="bg-[color:var(--usp-bg)] text-sm text-gray-100">
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                  Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
                 </span>
                 <span className="text-xs text-green-400 flex items-center gap-1">
                   Somnia Testnet
