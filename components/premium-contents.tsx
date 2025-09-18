@@ -16,7 +16,7 @@ type VideoCard = {
 const PREMIUM_VIDEOS: VideoCard[] = [
   {
     title: "Advanced Workflows & Automation",
-    href: "https://example.com/videos/advanced-workflows",
+    href: "/video/advanced-workflows",
     thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Advanced Workflows & Automation",
     tag: "Premium",
@@ -24,7 +24,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   },
   {
     title: "Scaling Best Practices",
-    href: "https://example.com/videos/scaling",
+    href: "/video/scaling",
     thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Scaling Best Practices",
     tag: "Premium",
@@ -32,7 +32,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
   },
   {
     title: "Security & Compliance Deep Dive",
-    href: "https://example.com/videos/security",
+    href: "/video/security",
     thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Security & Compliance",
     tag: "Premium",
@@ -156,8 +156,6 @@ export function PremiumContents() {
             <li key={v.href}>
               <a
                 href={v.href}
-                target="_blank"
-                rel="noreferrer"
                 className="group block overflow-hidden rounded-lg border border-[color:var(--usp-foreground)]/10 bg-[color:var(--usp-foreground)]/5 hover:bg-[color:var(--usp-foreground)]/10 transition-colors"
               >
                 <div className="relative aspect-video overflow-hidden">

@@ -8,25 +8,25 @@ type VideoCard = {
 
 const FREE_VIDEOS: VideoCard[] = [
   {
-    title: "Getting Started with Streams",
-    href: "https://example.com/videos/getting-started",
+    title: "Getting Started Guide",
+    href: "/video/getting-started",
     thumb: "/thumbnail1.jpg",
-    alt: "Video thumbnail: Getting Started with Streams",
-    duration: "4:12",
+    alt: "Video thumbnail: Getting Started Guide",
+    duration: "5:30",
   },
   {
-    title: "Set Up in 5 Minutes",
-    href: "https://example.com/videos/quick-setup",
+    title: "Basic Setup Tutorial",
+    href: "/video/basic-setup",
     thumb: "/thumbnail2.jpg",
-    alt: "Video thumbnail: Set Up in 5 Minutes",
-    duration: "5:02",
+    alt: "Video thumbnail: Basic Setup Tutorial",
+    duration: "7:15",
   },
   {
-    title: "Top 5 Use Cases",
-    href: "https://example.com/videos/use-cases",
+    title: "Platform Introduction",
+    href: "/video/introduction",
     thumb: "/thumbnail1.jpg",
-    alt: "Video thumbnail: Top 5 Use Cases",
-    duration: "6:45",
+    alt: "Video thumbnail: Platform Introduction",
+    duration: "4:45",
   },
 ]
 
@@ -47,8 +47,6 @@ export function FreeItems() {
           <li key={v.href}>
             <a
               href={v.href}
-              target="_blank"
-              rel="noreferrer"
               className="group block overflow-hidden rounded-lg border border-[color:var(--usp-foreground)]/10 bg-[color:var(--usp-foreground)]/5 hover:bg-[color:var(--usp-foreground)]/10 transition-colors"
             >
               <div className="relative aspect-video overflow-hidden">

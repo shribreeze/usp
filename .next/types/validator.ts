@@ -52,6 +52,12 @@ type ApiRouteConfig = {
   handler satisfies PagesPageConfig
 }
 
+// Validate ../../pages/video/[id].tsx
+{
+  const handler = {} as typeof import("../../pages/video/[id].js")
+  handler satisfies PagesPageConfig
+}
+
 // Validate ../../pages/api/gemini.ts
 {
   const handler = {} as typeof import("../../pages/api/gemini.js")
