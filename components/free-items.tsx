@@ -12,21 +12,21 @@ const FREE_VIDEOS: VideoCard[] = [
     href: "/video/getting-started",
     thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Getting Started Guide",
-    duration: "5:30",
+    duration: "00:40",
   },
   {
     title: "Basic Setup Tutorial",
     href: "/video/basic-setup",
     thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Basic Setup Tutorial",
-    duration: "7:15",
+    duration: "00:28",
   },
   {
     title: "Platform Introduction",
     href: "/video/introduction",
     thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Platform Introduction",
-    duration: "4:45",
+    duration: "00:06",
   },
 ]
 

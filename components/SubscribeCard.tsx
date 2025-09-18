@@ -151,8 +151,10 @@ export default function SubscribeCard() {
 
   // Check if subscription is truly active (has balance > 0)
   const hasBalance = parseFloat(balance) > 0
-  const isActive = (subscription?.[3] || false) && hasBalance
+  const hasSubscription = subscription?.[3] || false
+  const isActive = hasSubscription && hasBalance
   const currentPlan = subscription?.[0] ? Number(subscription[0]) : 0
+  const isExpired = hasSubscription && !hasBalance && currentPlan > 0
 
   return (
       <div 
@@ -304,7 +306,7 @@ export default function SubscribeCard() {
             </button>
           </div>
         </div>
-      ) : subscription?.[3] && !hasBalance ? (
+      ) : isExpired ? (
         // Expired subscription - show add balance option
         <div className="space-y-4">
           <div className="p-4 rounded-lg border border-orange-200/50 bg-orange-500/10">

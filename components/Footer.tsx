@@ -46,13 +46,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#docs" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-blue)] transition-colors">
+                <Link href="https://github.com/shribreeze/usp/blob/main/README.md" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-blue)] transition-colors">
                   Documentation
-                </Link>
-              </li>
-              <li>
-                <Link href="#api" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-blue)] transition-colors">
-                  API Reference
                 </Link>
               </li>
             </ul>
@@ -63,22 +58,17 @@ export default function Footer() {
             <h4 className="font-medium mb-4">Developers</h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="#sdk" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
+                <Link href="https://github.com/shribreeze/usp/blob/main/lib/usp-sdk.ts" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
                   SDK
                 </Link>
               </li>
               <li>
-                <Link href="#contracts" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
-                  Smart Contracts
-                </Link>
-              </li>
-              <li>
-                <Link href="#github" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
+                <Link href="https://github.com/shribreeze/usp" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
                   GitHub
                 </Link>
               </li>
               <li>
-                <Link href="#examples" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
+                <Link href="https://usp-somnia.vercel.app/" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-purple)] transition-colors">
                   Examples
                 </Link>
               </li>
@@ -97,11 +87,6 @@ export default function Footer() {
               <li>
                 <Link href="#twitter" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-pink)] transition-colors">
                   Twitter
-                </Link>
-              </li>
-              <li>
-                <Link href="#blog" className="text-[color:var(--usp-foreground)]/70 hover:text-[color:var(--usp-pink)] transition-colors">
-                  Blog
                 </Link>
               </li>
               <li>
@@ -126,7 +111,7 @@ export default function Footer() {
             </div>
             
             <div className="text-sm text-[color:var(--usp-foreground)]/70">
-              © 2024 Universal Subscription Protocol. Built on Somnia Network.
+              © 2025 Universal Subscription Protocol. Built on Somnia Network.
             </div>
           </div>
         </div>

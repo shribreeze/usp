@@ -20,7 +20,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
     thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Advanced Workflows & Automation",
     tag: "Premium",
-    duration: "9:27",
+    duration: "00:40",
   },
   {
     title: "Scaling Best Practices",
@@ -28,7 +28,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
     thumb: "/thumbnail1.jpg",
     alt: "Video thumbnail: Scaling Best Practices",
     tag: "Premium",
-    duration: "8:10",
+    duration: "00:06",
   },
   {
     title: "Security & Compliance Deep Dive",
@@ -36,7 +36,7 @@ const PREMIUM_VIDEOS: VideoCard[] = [
     thumb: "/thumbnail2.jpg",
     alt: "Video thumbnail: Security & Compliance",
     tag: "Premium",
-    duration: "11:03",
+    duration: "00:28",
   },
 ]
 

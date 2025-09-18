@@ -412,8 +412,128 @@ const hasSilver = await uspClient.hasPlanAccess(userAddress, 1)
 await uspClient.payForAI('0.000001')
 ```
 
+## 🎥 Video Player Integration
+
+### Secure Video Access Control
+```typescript
+// Video player with real-time subscription checking
+function VideoPlayer({ videoId, userAddress, provider, signer }) {
+  const [hasAccess, setHasAccess] = useState(false)
+  const uspClient = createUSPClient(provider, SUBSCRIPTION_MANAGER, NFT_ACCESS_PASS, signer)
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (videoId.startsWith('premium-')) {
+        const access = await uspClient.checkAccess(userAddress)
+        const balance = await uspClient.calculateCurrentBalance(userAddress)
+        setHasAccess(access && parseFloat(balance) > 0)
+      } else {
+        setHasAccess(true) // Free videos
+      }
+    }
+
+    checkAccess()
+    const interval = setInterval(checkAccess, 2000) // Check every 2 seconds
+    return () => clearInterval(interval)
+  }, [videoId, userAddress])
+
+  if (!hasAccess && videoId.startsWith('premium-')) {
+    return (
+      <div className="video-locked">
+        <h3>🔒 Premium Content</h3>
+        <p>Subscribe to access this video</p>
+      </div>
+    )
+  }
+
+  return (
+    <video controls>
+      <source src={`/videos/${videoId}.mp4`} type="video/mp4" />
+    </video>
+  )
+}
+```
+
+## 🔔 Global Toast Alerts
+
+### 15-Second Expiry Warnings
+```typescript
+// Global toast provider for subscription alerts
+function GlobalToastProvider({ children }) {
+  const [showAlert, setShowAlert] = useState(false)
+  const { address } = useAccount()
+  const uspClient = createUSPClient(provider, SUBSCRIPTION_MANAGER, NFT_ACCESS_PASS)
+
+  useEffect(() => {
+    if (!address) return
+
+    const checkExpiry = async () => {
+      const timeLeft = await uspClient.calculateRemainingTime(address)
+      if (timeLeft <= 15 && timeLeft > 0) {
+        setShowAlert(true)
+      }
+    }
+
+    const interval = setInterval(checkExpiry, 2000)
+    return () => clearInterval(interval)
+  }, [address])
+
+  return (
+    <>
+      {children}
+      {showAlert && (
+        <div className="toast-alert">
+          ⚠️ Only 15 seconds remaining! Add balance to continue.
+        </div>
+      )}
+    </>
+  )
+}
+```
+
+## 🔄 Plan Reactivation
+
+### Handle Expired Subscriptions
+```typescript
+// Check if subscription is expired and allow reactivation
+async function handleExpiredSubscription(userAddress: string) {
+  const subscription = await uspClient.getSubscription(userAddress)
+  const currentBalance = await uspClient.calculateCurrentBalance(userAddress)
+  
+  const isExpired = subscription.active && parseFloat(currentBalance) === 0
+  
+  if (isExpired) {
+    // Show reactivation UI
+    return {
+      status: 'expired',
+      planId: subscription.planId,
+      planType: subscription.planId === 1 ? 'Silver' : 'Gold',
+      canReactivate: true
+    }
+  }
+  
+  return {
+    status: subscription.active ? 'active' : 'inactive',
+    canReactivate: false
+  }
+}
+
+// Reactivate expired subscription
+async function reactivateSubscription(planId: number, amount: string) {
+  try {
+    const tx = await uspClient.subscribe(planId, amount)
+    console.log('Subscription reactivated:', tx.hash)
+    return tx.hash
+  } catch (error) {
+    console.error('Reactivation failed:', error)
+    throw error
+  }
+}
+```
+
 ## 📞 Support
 
 - **Contracts:** Deployed on Somnia Testnet
-- **Documentation:** See main README.md and SDK.md
+- **Documentation:** See main README.md
 - **Issues:** Create GitHub issue for bugs/questions
+- **Live Demo:** https://usp-somnia.vercel.app

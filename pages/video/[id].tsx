@@ -12,21 +12,21 @@ const VIDEOS = {
   // Free videos
   'getting-started': {
     title: 'Getting Started Guide',
-    duration: '5:30',
+    duration: '00:40',
     file: '/videos/getting-started.mp4',
     description: 'Learn the basics and get started with our platform.',
     type: 'free'
   },
   'basic-setup': {
     title: 'Basic Setup Tutorial',
-    duration: '7:15',
+    duration: '00:28',
     file: '/videos/basic-setup.mp4', 
     description: 'Step-by-step guide to basic configuration and setup.',
     type: 'free'
   },
   'introduction': {
     title: 'Platform Introduction',
-    duration: '4:45',
+    duration: '00:06',
     file: '/videos/introduction.mp4',
     description: 'Overview of features and capabilities.',
     type: 'free'
@@ -34,21 +34,21 @@ const VIDEOS = {
   // Premium videos
   'advanced-workflows': {
     title: 'Advanced Workflows & Automation',
-    duration: '9:27',
+    duration: '00:40',
     file: '/videos/advanced-workflows.mp4',
     description: 'Learn advanced automation techniques and workflow optimization strategies.',
     type: 'premium'
   },
   'scaling': {
     title: 'Scaling Best Practices',
-    duration: '8:10', 
+    duration: '00:06', 
     file: '/videos/scaling.mp4',
     description: 'Discover proven methods for scaling your applications and infrastructure.',
     type: 'premium'
   },
   'security': {
     title: 'Security & Compliance Deep Dive',
-    duration: '11:03',
+    duration: '00:28',
     file: '/videos/security.mp4', 
     description: 'Comprehensive guide to security best practices and compliance requirements.',
     type: 'premium'

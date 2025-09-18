@@ -10,6 +10,9 @@ USP is a decentralized subscription protocol built on **Somnia Network** that en
 - 🎫 **NFT Access Pass** - Automatic minting/burning for gated content
 - 💰 **Instant cancellation** - Get refund of remaining balance
 - ⏰ **Smart alerts** - 15-second expiry warnings with toast notifications
+- 🎥 **Secure Video Player** - Internal video system with real-time access control
+- 🌐 **Network Switching** - Auto-switch to Somnia Testnet
+- 🔄 **Plan Reactivation** - Seamless expired subscription renewal
 - 🔒 **Fully on-chain** - Transparent and decentralized
 - 📱 **Modern Web3 UI** - Live balance countdown and responsive design
 
@@ -65,14 +68,15 @@ pnpm run dev
 
 ## 💡 How It Works
 
-1. **Connect Wallet** - MetaMask to Somnia testnet
+1. **Connect Wallet** - MetaMask to Somnia testnet (auto-switch if needed)
 2. **Choose Plan** - Silver (premium content) or Gold (premium + AI chat)
 3. **Subscribe** - Pay STT to start streaming subscription  
 4. **Get NFT** - Receive Access Pass NFT automatically
-5. **Access Features** - Premium content + AI assistant (Gold only)
-6. **Live Updates** - Real-time balance countdown with smart alerts
-7. **AI Chat** - 5 free requests for Gold users, then pay-per-use
-8. **Cancel Anytime** - Get refund of remaining balance
+5. **Access Content** - Watch premium videos with secure player
+6. **AI Assistant** - Chat with Gemini 2.0 Flash (Gold plan only)
+7. **Live Updates** - Real-time balance countdown with smart alerts
+8. **Plan Expiry** - Get 15-second warnings, reactivate seamlessly
+9. **Cancel Anytime** - Get refund of remaining balance
 
 ## 🔧 Smart Contracts
 
@@ -141,11 +145,13 @@ await uspClient.cancelSubscription()
 ## 🎨 Frontend Components
 
 ### Key Components
-- **Hero.tsx** - Landing page with gradient background
+- **Hero.tsx** - Landing page with gradient background & network switching
 - **SubscribeCard.tsx** - Multi-plan interface with live countdown & alerts
 - **SubscribeModal.tsx** - Popup subscription flow
 - **AIChatModal.tsx** - AI assistant with Gemini 2.0 Flash integration
 - **AIFloatingButton.tsx** - Floating AI access button for Gold users
+- **VideoPlayer.tsx** - Secure video player with real-time access control
+- **GlobalToastProvider.tsx** - Global 15-second expiry alert system
 - **Toast.tsx** - Smart notification system for expiry alerts
 - **GatedContent.tsx** - Premium content with plan-based access control
 - **Footer.tsx** - Responsive footer with links
@@ -173,7 +179,9 @@ usp/
 ├── components/          # React components
 ├── lib/                # Utilities and config
 ├── pages/              # Next.js pages
+│   └── video/          # Video player pages
 ├── public/             # Static assets
+│   └── videos/         # Video files (upload here)
 ├── contracts/          # Smart contracts
 ├── scripts/            # Deployment scripts
 └── styles/             # CSS styles
@@ -220,6 +228,38 @@ npx hardhat run scripts/deploy.js --network somniaTestnet
 - **Free Quota**: 5 requests per Gold subscription
 - **Pay-per-use**: 0.000001 STT per additional request
 - **Features**: Auto-scroll, formatted responses, real-time chat
+- **Auto-Lock**: AI button locks when Gold plan expires
+
+## 🎥 Video System
+
+### Free Videos
+- **Getting Started Guide** - Platform introduction
+- **Basic Setup Tutorial** - Configuration walkthrough  
+- **Platform Introduction** - Feature overview
+
+### Premium Videos (Subscription Required)
+- **Advanced Workflows & Automation** - Expert techniques
+- **Scaling Best Practices** - Infrastructure scaling
+- **Security & Compliance Deep Dive** - Security guide
+
+### Security Features
+- **Real-time Access Control** - Checks subscription every 2 seconds
+- **Instant Lock** - Videos lock immediately when subscription expires
+- **No Bypass** - Internal player prevents tab-based access
+- **Global Alerts** - 15-second expiry warnings on video pages
+
+## 🔄 Plan Management
+
+### Subscription States
+1. **No Subscription** - Shows plan selection
+2. **Active Subscription** - Live balance countdown with add balance option
+3. **Expired Subscription** - Shows reactivation UI with same plan
+
+### Smart Features
+- **Auto-Detection** - Detects expired subscriptions in real-time
+- **Seamless Reactivation** - One-click renewal with same plan
+- **Balance Monitoring** - Continuous balance calculation
+- **Network Validation** - Ensures transactions on correct network
 
 ## 🤝 Contributing
 
@@ -235,6 +275,19 @@ npx hardhat run scripts/deploy.js --network somniaTestnet
 - **SDK Integration**: [SDK-INTEGRATION.md](./SDK-INTEGRATION.md)
 - **Smart Contracts**: [contracts/](./contracts/)
 - **API Reference**: [pages/api/](./pages/api/)
+
+## 📹 Video Setup
+
+Upload your video files to `/public/videos/`:
+```
+public/videos/
+├── getting-started.mp4     # Free content
+├── basic-setup.mp4         # Free content  
+├── introduction.mp4        # Free content
+├── advanced-workflows.mp4  # Premium content
+├── scaling.mp4            # Premium content
+└── security.mp4           # Premium content
+```
 
 ## 🔗 Links
 - **Website:** [https://usp-somnia.vercel.app](https://usp-somnia.vercel.app)

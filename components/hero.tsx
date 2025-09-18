@@ -56,16 +56,16 @@ export default function Hero() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-950">
         <div className="container mx-auto px-4 py-8">
           <header className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-gray-100 mb-4">
               Universal Subscription Protocol
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-200 mb-8">
               The Stripe of Web3 - Fully On-Chain Subscriptions
             </p>
-            <div className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg inline-block">
+            <div className="bg-blue-300 text-black font-bold py-3 px-6 rounded-lg inline-block">
               Loading...
             </div>
           </header>
